@@ -10,7 +10,7 @@ import java.util.List;
 
 @Configuration
 public class StudentConfig {
-    @Bean
+    /* @Bean
     CommandLineRunner commandLineRunner(StudentRepository repository){
         return args -> {
             Student rupert = new Student( "rupert",
@@ -29,5 +29,6 @@ public class StudentConfig {
                     List.of(rupert, mickey)
             );
         };
-    }
+    } */
+
 }

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table
-
 public class Student {
 
     @SequenceGenerator(
