@@ -27,23 +27,20 @@ public class StudentController {
     public void registerNewStudent(@RequestBody Student student){
         studentService.addNewStudent(student);
     }
-    @DeleteMapping(path = "{student_id}")
-    public void deleteStudent(@PathVariable("student_id") String id){
+    @DeleteMapping(path = "{id}")
+    public void deleteStudent(@PathVariable("id") String id){
         studentService.deleteStudent(id);
     }
-    @PutMapping(path = "{student_id}")
+    @PutMapping(path = "{id}")
     public void updateStudent(
-        @PathVariable("student_id") String student_id,
-        @RequestParam(required = false) String Student_name,
+        @PathVariable("id") String id,
+        @RequestParam(required = false) String name,
         @RequestParam(required = false) String status){
 
-        studentService.updateStudent(student_id, Student_name, status);
+        studentService.updateStudent(id, name, status);
 
     }
 
-    @GetMapping(path = "/hello")
-    public ResponseEntity<?> sayHello() {
-        return ResponseBody.ok("Hello, World!");
-    }
+
  
 }
