@@ -1,10 +1,10 @@
 package com.example.spring_boot.Student;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.spring_boot.Student.StudentService;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -18,6 +18,8 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+
+
     public void addNewStudent(Student student){
         studentRepository.findStudentByName(student.getName());
         Optional<Student> studentOptional = studentRepository.findStudentByName(student.getName());
@@ -28,6 +30,8 @@ public class StudentService {
         studentRepository.save(student);
         System.out.println(student);
     }
+
+
     public void deleteStudent(String id){
         boolean exists = studentRepository.existsById(id);
         if (!exists){
@@ -36,8 +40,24 @@ public class StudentService {
         studentRepository.deleteById(id);
 
     }
-    public void updateStudent(String id){
-        studentRepository.findById(id);
+    @Transactional
+    public void updateStudent(String student_id,
+                              String name,
+                              String status){
+        Student student = studentRepository.findById(student_id)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Student with id " + student_id + " doesn't exist"
+                ));
+        if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)){
+            Optional<Student> findStudentByEmail = studentRepository.findStudentByName(student.getName());
+            student.setName(name);
+        }
+        if (status != null && !status.isEmpty() && !Objects.equals(student.getStatus(), status)){
+            student.setStatus(status);
+        }
+
+
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.spring_boot.Student;
  
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,13 +27,23 @@ public class StudentController {
     public void registerNewStudent(@RequestBody Student student){
         studentService.addNewStudent(student);
     }
-    @DeleteMapping
-    public void deleteStudent(@PathVariable String id){
+    @DeleteMapping(path = "{student_id}")
+    public void deleteStudent(@PathVariable("student_id") String id){
         studentService.deleteStudent(id);
     }
-    @PutMapping
-    public void updateStudent(@PathVariable String id){
-        studentService.updateStudent(id);
+    @PutMapping(path = "{student_id}")
+    public void updateStudent(
+        @PathVariable("student_id") String student_id,
+        @RequestParam(required = false) String Student_name,
+        @RequestParam(required = false) String status){
+
+        studentService.updateStudent(student_id, Student_name, status);
+
+    }
+
+    @GetMapping(path = "/hello")
+    public ResponseEntity<?> sayHello() {
+        return ResponseBody.ok("Hello, World!");
     }
  
 }
