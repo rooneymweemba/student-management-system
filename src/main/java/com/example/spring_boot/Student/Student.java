@@ -18,7 +18,7 @@ public class Student {
     private String id = generateRandomId(10);
     private String content;
     private String status;
-    //fix this
+
     private String date = new java.util.Date().toString();
     private String created_at = date;
     private String updated_at = date;
