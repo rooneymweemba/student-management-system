@@ -10,18 +10,17 @@ import java.time.LocalDate;
 @Table
 public class Student {
 
-    @SequenceGenerator(name = "student_sequence", sequenceName = "student_sequence", allocationSize = 1)
+
 
     private String name;
     @Id
     @Column(length = 10, nullable = false, unique = true)
-
-    private String id;
+    private String id = generateRandomId(10);
     private String content;
     private String status;
-
-    private String created_at;
-    private String updated_at;
+    private String date = new java.util.Date().toString();
+    private String created_at = date;
+    private String updated_at = date;
 
     public Student(String name, String id, String content, String status, String created_at, String updated_at) {
         this.name = name;
@@ -49,7 +48,7 @@ public class Student {
         }
     }
 
-    // ✅ ID generator method
+    // ID generator method
     private String generateRandomId(int length) {
         String digits = "0123456789";
         StringBuilder sb = new StringBuilder();

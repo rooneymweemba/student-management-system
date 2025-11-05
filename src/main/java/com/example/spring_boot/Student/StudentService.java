@@ -49,13 +49,14 @@ public class StudentService {
                         "Student with id " + student_id + " doesn't exist"
                 ));
         if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)){
-            Optional<Student> findStudentByEmail = studentRepository.findStudentByName(student.getName());
             student.setName(name);
         }
         if (status != null && !status.isEmpty() && !Objects.equals(student.getStatus(), status)){
             student.setStatus(status);
         }
-
+        String updated_at = new java.util.Date().toString();
+        student.setUpdated_at(updated_at);
+        studentRepository.save(student);
 
 
     }
