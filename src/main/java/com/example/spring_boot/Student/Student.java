@@ -19,9 +19,8 @@ public class Student {
     private String content;
     private String status;
 
-    private String date = new java.util.Date().toString();
-    private String created_at = date;
-    private String updated_at = date;
+    private String created_at ;
+    private String updated_at ;
 
     public Student(String name, String id, String content, String status, String created_at, String updated_at) {
         this.name = name;
@@ -43,10 +42,13 @@ public class Student {
     }
 
     @PrePersist
-    public void generateStudentId() {
+    public void onCreate() {
         if (this.id == null) {
             this.id = generateRandomId(10);
+        this.created_at = new java.util.Date().toString();
+        this.updated_at = new java.util.Date().toString();
         }
+
     }
 
     // ID generator method
@@ -59,6 +61,8 @@ public class Student {
         }
         return sb.toString();
     }
+
+
 
 
 }
