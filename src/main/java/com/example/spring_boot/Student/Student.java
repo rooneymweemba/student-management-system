@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 // the data annotation from lombok generates getters and setters automatically
 @Data
 @Entity
@@ -33,21 +36,25 @@ public class Student {
     public Student() {
     }
 
-    public Student(String name, String content, String status, String created_at, String updated_at) {
+    public Student(String name, String content, String status) {
         this.name = name;
         this.content = content;
         this.status = status;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
     }
 
     @PrePersist
     public void onCreate() {
         if (this.id == null) {
             this.id = generateRandomId(10);
-        this.created_at = new java.util.Date().toString();
-        this.updated_at = new java.util.Date().toString();
+
         }
+        if (this.status == null){
+            this.status = "PENDING";
+        }
+        LocalDateTime now = LocalDateTime.now();
+        String formatted = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.created_at = formatted;
+        this.updated_at = formatted;
 
     }
 
