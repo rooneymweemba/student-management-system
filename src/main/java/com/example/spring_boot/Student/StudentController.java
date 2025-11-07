@@ -67,7 +67,7 @@ public class StudentController {
         }
 
         HttpStatus httpStatus = HttpStatus.OK;
-        String message = String.format("Student with id %s has been updated",id);
+        String message = String.format("Student with id %s has been updated ",id) + incompleteMessage;
         ApiResponse response = new ApiResponse(message,httpStatus);
         return new  ResponseEntity<>(response,httpStatus);
     }
