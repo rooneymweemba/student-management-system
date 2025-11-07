@@ -58,7 +58,7 @@ public class Student {
 
     }
 
-    // ID generator method
+    // ID generator meth
     private String generateRandomId(int length) {
         String digits = "0123456789";
         StringBuilder sb = new StringBuilder();
