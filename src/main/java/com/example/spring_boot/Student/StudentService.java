@@ -22,7 +22,7 @@ public class StudentService {
     public List<Student> getAllStudents() {
         log.info("Fetching all students from repository");
         List<Student> students = studentRepository.findAll();
-        log.info("Fetched {} students", students.size());
+        log.info("Fetched size -> {} | students [{}]", students.size(), students);
         return students;
     }
 
@@ -49,15 +49,21 @@ public class StudentService {
     public void updateStudent(String student_id,
                               String name,
                               String status){
-        Student student = studentRepository.findById(student_id)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Student with id " + student_id + " doesn't exist"
-                ));
+        Optional<Student> studentOptional = studentRepository.findById(student_id);
+        if(studentOptional.isPresent()){
+            log.info("student with id " + student_id + " has been found");
+        }
+
+        Student student = studentOptional.get();
+
+
         if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)){
             student.setName(name);
+            log.info("student with id {} name changed to {} ", student_id, name);
         }
         if (status != null && !status.isEmpty() && !Objects.equals(student.getStatus(), status)){
             student.setStatus(status);
+            log.info("student with id {} status changed to {} ", student_id, status);
         }
         String updated_at = new java.util.Date().toString();
         student.setUpdated_at(updated_at);

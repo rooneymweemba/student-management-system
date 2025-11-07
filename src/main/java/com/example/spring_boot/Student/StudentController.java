@@ -29,18 +29,22 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewStudent(@RequestBody Student student){
+    public ResponseEntity<ApiResponse> registerNewStudent(@RequestBody Student student){
         studentService.addNewStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
+        ApiResponse response = new ApiResponse("Student added successfully",HttpStatus.CREATED);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity<String> deleteStudent(@PathVariable("id") String id){
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable("id") String id){
         studentService.deleteStudent(id);
-        return ResponseEntity.ok("student "+ id + " has been removed  successfully" );
+        HttpStatus status = HttpStatus.NO_CONTENT;
+        String message = String.format("Student with id %s has been deleted",id);
+        ApiResponse response = new ApiResponse(message,status);
+        return new  ResponseEntity<>(response,status);
     }
     @PutMapping(path = "{id}")
-    public ResponseEntity<String> updateStudent(
+    public ResponseEntity<ApiResponse> updateStudent(
         @PathVariable("id") String id,
         @RequestParam(required = false) String name,
         @RequestParam(required = false) String status){
@@ -53,16 +57,19 @@ public class StudentController {
         if (status != null) {
             updated.add("status");
         }
-        String message;
+        String incompleteMessage;
         if (updated.isEmpty()) {
-            message = "No fields were updated";
+            incompleteMessage = "No fields were updated";
         } else if (updated.size() == 1) {
-            message = updated.get(0) + " has been updated";
+            incompleteMessage = updated.get(0) + " has been updated";
         } else {
-            message = String.join(" and ", updated) + " have been updated";
+            incompleteMessage = String.join(" and ", updated) + " have been updated";
         }
 
-        return ResponseEntity.ok(message);
+        HttpStatus httpStatus = HttpStatus.OK;
+        String message = String.format("Student with id %s has been updated",id);
+        ApiResponse response = new ApiResponse(message,httpStatus);
+        return new  ResponseEntity<>(response,httpStatus);
     }
 
 }
