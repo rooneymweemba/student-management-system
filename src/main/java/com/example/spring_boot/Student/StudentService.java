@@ -1,43 +1,75 @@
 package com.example.spring_boot.Student;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.spring_boot.Student.StudentService;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class StudentService {
+    //what in this code is worth logging
+
     @Autowired
     private final StudentRepository studentRepository;
 
     public StudentService(StudentRepository studentRepository) {
+
         this.studentRepository = studentRepository;
     }
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        log.info("Fetching all students from repository");
+        List<Student> students = studentRepository.findAll();
+        log.info("Fetched size -> {} | students [{}]", students.size(), students);
+        return students;
     }
-    public void addNewStudent(Student student){
-        studentRepository.findStudentByName(student.getName());
-        Optional<Student> studentOptional = studentRepository.findStudentByName(student.getName());
-        if (studentOptional.isPresent()){
-            throw new IllegalStateException("name taken");
 
-        }
+
+    public void addNewStudent(Student student){
+        Optional<Student> studentOptional = studentRepository.findStudentById(student.getId());
         studentRepository.save(student);
-        System.out.println(student);
+        log.info("student with id " + student.getId() + " has been added") ;
+        if(studentOptional.isPresent()){
+            log.error("id has already been given out");
+        }
     }
+
+
     public void deleteStudent(String id){
         boolean exists = studentRepository.existsById(id);
         if (!exists){
-            throw new IllegalStateException("student with id " + id + " does not exist");
+            log.info("No Student with this ID exists");
         }
         studentRepository.deleteById(id);
 
     }
-    public void updateStudent(String id){
-        studentRepository.findById(id);
+    @Transactional
+    public void updateStudent(String student_id,
+                              String name,
+                              String status){
+        Optional<Student> studentOptional = studentRepository.findById(student_id);
+        if(studentOptional.isPresent()){
+            log.info("student with id " + student_id + " has been found");
+        }
+
+        Student student = studentOptional.get();
+
+
+        if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)){
+            student.setName(name);
+            log.info("student with id {} name changed to {} ", student_id, name);
+        }
+        if (status != null && !status.isEmpty() && !Objects.equals(student.getStatus(), status)){
+            student.setStatus(status);
+            log.info("student with id {} status changed to {} ", student_id, status);
+        }
+        String updated_at = new java.util.Date().toString();
+        student.setUpdated_at(updated_at);
+        studentRepository.save(student);
+
+
     }
 
 }
