@@ -1,16 +1,18 @@
-package com.example.spring_boot.Student;
+package com.example.spring_boot.Student.controller;
 
 
+import com.example.spring_boot.Student.responseDTO.ApiResponse;
+import com.example.spring_boot.Student.Student;
+import com.example.spring_boot.Student.services.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
@@ -29,18 +31,24 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> registerNewStudent(@RequestBody Student student){
-        studentService.addNewStudent(student);
-        ApiResponse response = new ApiResponse("Student added successfully",HttpStatus.CREATED);
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){
+        try {
+            studentService.addNewStudent(student);
+            ApiResponse response = new ApiResponse("Student added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+            String message = "Something went wrong while adding the student";
+            ApiResponse response = new ApiResponse(message, status);
+            return new ResponseEntity<>(response, status);
+        }
     }
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<ApiResponse> deleteStudent(@PathVariable("id") String id){
         studentService.deleteStudent(id);
         HttpStatus status = HttpStatus.NO_CONTENT;
-        String message = String.format("Student with id %s has been deleted",id);
-        ApiResponse response = new ApiResponse(message,status);
+        ApiResponse response = new ApiResponse("Student deleted successfully",status);
         return new  ResponseEntity<>(response,status);
     }
     @PutMapping(path = "{id}")
@@ -67,7 +75,7 @@ public class StudentController {
         }
 
         HttpStatus httpStatus = HttpStatus.OK;
-        String message = String.format("Student with id %s has been updated",id);
+        String message = String.format("Student with id %s has been updated ",id) + incompleteMessage;
         ApiResponse response = new ApiResponse(message,httpStatus);
         return new  ResponseEntity<>(response,httpStatus);
     }

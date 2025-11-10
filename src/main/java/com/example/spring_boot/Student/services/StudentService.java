@@ -1,4 +1,6 @@
-package com.example.spring_boot.Student;
+package com.example.spring_boot.Student.services;
+import com.example.spring_boot.Student.Student;
+import com.example.spring_boot.Student.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,11 @@ public class StudentService {
     public void addNewStudent(Student student){
         Optional<Student> studentOptional = studentRepository.findStudentById(student.getId());
         studentRepository.save(student);
-        log.info("student with id " + student.getId() + " has been added") ;
+        log.info("student with id {} has been added",student.getId()) ;
         if(studentOptional.isPresent()){
             log.error("id has already been given out");
         }
+
     }
 
 
@@ -51,7 +54,7 @@ public class StudentService {
                               String status){
         Optional<Student> studentOptional = studentRepository.findById(student_id);
         if(studentOptional.isPresent()){
-            log.info("student with id " + student_id + " has been found");
+            log.info("student with {} has been found", student_id);
         }
 
         Student student = studentOptional.get();

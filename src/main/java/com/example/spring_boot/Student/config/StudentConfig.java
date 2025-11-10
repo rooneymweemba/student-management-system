@@ -1,12 +1,6 @@
-package com.example.spring_boot.Student;
+package com.example.spring_boot.Student.config;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.CommandLinePropertySource;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Configuration
 public class StudentConfig {
@@ -23,7 +17,7 @@ public class StudentConfig {
                     "2",
                     "DONE",
                     LocalDate.now().toString(),
-                    LocalDate.now().toString()
+
             );
             repository.saveAll(
                     List.of(rupert, mickey)
