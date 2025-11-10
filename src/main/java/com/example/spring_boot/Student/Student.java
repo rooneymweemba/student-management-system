@@ -2,26 +2,24 @@ package com.example.spring_boot.Student;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import jakarta.validation.constraints.*;
 
 // the data annotation from lombok generates getters and setters automatically
 @Data
 @Entity
 @Table
 public class Student {
-
-
-
+    @NotBlank
+    @Size(max = 30)
     private String name;
     @Id
-    @Column(length = 10, nullable = false, unique = true)
     private String id = generateRandomId(10);
+    @Size(max = 255)
     private String content;
     private String status;
-
     private String created_at ;
     private String updated_at ;
 
