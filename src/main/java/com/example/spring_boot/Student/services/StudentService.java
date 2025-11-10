@@ -12,7 +12,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class StudentService {
-    //what in this code is worth logging
+
 
     @Autowired
     private final StudentRepository studentRepository;

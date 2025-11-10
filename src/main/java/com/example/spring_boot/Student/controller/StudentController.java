@@ -32,16 +32,10 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){
-        try {
             studentService.addNewStudent(student);
             ApiResponse response = new ApiResponse("Student added successfully", HttpStatus.CREATED);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            String message = "Something went wrong while adding the student";
-            ApiResponse response = new ApiResponse(message, status);
-            return new ResponseEntity<>(response, status);
-        }
+
     }
 
     @DeleteMapping(path = "{id}")
