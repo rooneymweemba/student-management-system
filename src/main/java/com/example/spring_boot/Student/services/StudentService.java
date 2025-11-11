@@ -12,7 +12,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class StudentService {
-    //what in this code is worth logging
+
 
     @Autowired
     private final StudentRepository studentRepository;
@@ -25,6 +25,14 @@ public class StudentService {
         log.info("Fetching all students from repository");
         List<Student> students = studentRepository.findAll();
         log.info("Fetched size -> {} | students [{}]", students.size(), students);
+        return students;
+    }
+    public Optional<Student> findStudentsByID(String id) {
+        log.info("Fetching all student with id {} from repository", id);
+        Optional<Student> students = studentRepository.findStudentById(id);
+        if(students.isPresent()){
+        log.info("found student with id {}", id);
+        }
         return students;
     }
 

@@ -1,11 +1,12 @@
 package com.example.spring_boot.Student.controller;
-
-
+import com.example.spring_boot.Student.globalExceptionHandler.DatabaseOperationException;
+import com.example.spring_boot.Student.globalExceptionHandler.StudentNotFoundException;
 import com.example.spring_boot.Student.responseDTO.ApiResponse;
 import com.example.spring_boot.Student.Student;
 import com.example.spring_boot.Student.services.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
@@ -27,21 +29,26 @@ public class StudentController {
 
     @GetMapping
     public List<Student> getStudents() {
-        return studentService.getAllStudents();
+        try {
+            return studentService.getAllStudents();
+        } catch (DataAccessException e) {
+            throw new DatabaseOperationException("Lost access to database", e);
+        }
     }
+    @GetMapping(path = "{id}")
+    public Student getStudentById(@PathVariable("id") String id) {
 
+        try {
+            return studentService.findStudentsByID(id).orElseThrow(() -> new StudentNotFoundException("Student not found", null));
+        } catch (StudentNotFoundException e) {
+            throw new StudentNotFoundException("Student not found", e);
+        }
+    }
     @PostMapping
     public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){
-        try {
             studentService.addNewStudent(student);
             ApiResponse response = new ApiResponse("Student added successfully", HttpStatus.CREATED);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            String message = "Something went wrong while adding the student";
-            ApiResponse response = new ApiResponse(message, status);
-            return new ResponseEntity<>(response, status);
-        }
     }
 
     @DeleteMapping(path = "{id}")
@@ -52,7 +59,7 @@ public class StudentController {
         return new  ResponseEntity<>(response,status);
     }
     @PutMapping(path = "{id}")
-    public ResponseEntity<ApiResponse> updateStudent(
+    public ResponseEntity<ApiResponse> updateStudent(@Valid
         @PathVariable("id") String id,
         @RequestParam(required = false) String name,
         @RequestParam(required = false) String status){
