@@ -27,6 +27,14 @@ public class StudentService {
         log.info("Fetched size -> {} | students [{}]", students.size(), students);
         return students;
     }
+    public Optional<Student> findStudentsByID(String id) {
+        log.info("Fetching all student with id {} from repository", id);
+        Optional<Student> students = studentRepository.findStudentById(id);
+        if(students.isPresent()){
+        log.info("found student with id {}", id);
+        }
+        return students;
+    }
 
 
     public void addNewStudent(Student student){
