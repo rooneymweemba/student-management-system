@@ -1,10 +1,10 @@
 package com.example.spring_boot.Student;
 
-import com.example.spring_boot.Student.validation.validateNonNumeric;
-import com.example.spring_boot.Student.validation.validateStatus;
+import com.example.spring_boot.Student.validation.ValidateNonNumeric;
+import com.example.spring_boot.Student.validation.ValidateStatus;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import jakarta.validation.constraints.*;
@@ -16,14 +16,14 @@ import jakarta.validation.constraints.*;
 public class Student {
     @NotBlank
     @Size(max = 30)
-    @validateNonNumeric(message = "Name must not contain numeric characters")
+    @ValidateNonNumeric(message = "Name must not contain numeric characters")
     private String name;
     @Id
     private String id = generateRandomId(10);
     @Size(max = 255)
     private String content;
 
-    @validateStatus
+    @ValidateStatus
     private String status;
     private String created_at ;
     private String updated_at ;
