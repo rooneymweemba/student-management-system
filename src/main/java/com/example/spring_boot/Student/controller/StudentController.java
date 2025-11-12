@@ -37,12 +37,8 @@ public class StudentController {
     }
     @GetMapping(path = "{id}")
     public Student getStudentById(@PathVariable("id") String id) {
+        return studentService.findStudentsByID(id).orElseThrow(() -> new StudentNotFoundException("Student not found", null));
 
-        try {
-            return studentService.findStudentsByID(id).orElseThrow(() -> new StudentNotFoundException("Student not found", null));
-        } catch (StudentNotFoundException e) {
-            throw new StudentNotFoundException("Student not found", e);
-        }
     }
     @PostMapping
     public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){

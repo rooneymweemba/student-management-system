@@ -51,6 +51,7 @@ public class GlobalExceptionHandler {
                     .map(error -> error.getDefaultMessage())
                     .orElse("Validation failed");
             ApiResponse response = new ApiResponse(errorMessage, HttpStatus.BAD_REQUEST);
+            log.error("Validation failed: {}", errorMessage);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
