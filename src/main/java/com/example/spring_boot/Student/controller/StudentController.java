@@ -5,6 +5,7 @@ import com.example.spring_boot.Student.responseDTO.ApiResponse;
 import com.example.spring_boot.Student.Student;
 import com.example.spring_boot.Student.services.StudentService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping(path = "api/v1/student")
+@CrossOrigin(origins = "*")
 public class StudentController {
 
     private final StudentService studentService;
@@ -35,13 +37,14 @@ public class StudentController {
             throw new DatabaseOperationException("Lost access to database", e);
         }
     }
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "findById/{id}")
     public Student getStudentById(@PathVariable("id") String id) {
         return studentService.findStudentsByID(id).orElseThrow(() -> new StudentNotFoundException("Student not found", null));
 
     }
     @PostMapping
     public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){
+        log.info("received new student request -> {}", student);
             studentService.addNewStudent(student);
             ApiResponse response = new ApiResponse("Student added successfully", HttpStatus.CREATED);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
