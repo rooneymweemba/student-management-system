@@ -44,6 +44,10 @@ public class Student {
         this.content = content;
         this.status = status;
     }
+    public Student(String name, String content) {
+        this.name = name;
+        this.content = content;
+    }
 
     @PrePersist
     public void onCreate() {
@@ -51,7 +55,7 @@ public class Student {
             this.id = generateRandomId(10);
 
         }
-        if (this.status == null){
+        if (this.status == null || !this.status.equals("PENDING") && !this.status.equals("DONE")){
             this.status = "PENDING";
         }
         LocalDateTime now = LocalDateTime.now();

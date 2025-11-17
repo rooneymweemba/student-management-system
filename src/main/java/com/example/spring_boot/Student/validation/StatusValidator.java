@@ -6,6 +6,9 @@ import jakarta.validation.ConstraintValidatorContext;
 public class StatusValidator implements ConstraintValidator<ValidateStatus, String> {
     @Override
     public boolean isValid(String status, ConstraintValidatorContext context) {
+        if(status == null){
+            return true;
+        }
         return status.equals("PENDING") || status.equals("DONE");
     }
 }
