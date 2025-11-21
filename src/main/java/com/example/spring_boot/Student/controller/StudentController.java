@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,23 @@ public class StudentController {
         return studentService.findStudentsByID(id).orElseThrow(() -> new StudentNotFoundException("Student not found", null));
 
     }
+    @GetMapping(path = "{field}")
+    public List<Student> getSortedStudents(@PathVariable("field") String field) {
+        try {
+            return studentService.sortedStudents(field);
+        } catch (DataAccessException e) {
+           throw new DatabaseOperationException("Lost access to database", e);
+        }
+    }
+    @GetMapping(path = "/pagination/{offset}/{pageSize}")
+    public Page<Student> paginatedStudents(@PathVariable int offset, @PathVariable int pageSize) {
+        return studentService.paginatedStudents(offset, pageSize);
+    }
+    @GetMapping(path = "/paginationAndSort/{offset}/{pageSize}/{field}")
+    public Page<Student> paginatedAndSortedStudents(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String field) {
+        return studentService.paginatedAndSortedStudents(offset, pageSize, field);
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse> registerNewStudent(@Valid @RequestBody Student student){
         log.info("received new student request -> {}", student);

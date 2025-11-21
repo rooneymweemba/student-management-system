@@ -4,8 +4,14 @@ import com.example.spring_boot.Student.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,7 +41,18 @@ public class StudentService {
         }
         return students;
     }
+    public List<Student> sortedStudents(String field){
+        log.info("field: {}", field);
+        return studentRepository.findAll(Sort.by(field).descending());
+    }
+    public Page<Student> paginatedStudents(int offset,int pageSize) {
+        return studentRepository.findAll(PageRequest.of(offset, pageSize));
 
+    }
+    public Page<Student> paginatedAndSortedStudents(int offset,int pageSize, String field) {
+        return studentRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field).descending()));
+
+    }
 
     public void addNewStudent(Student student){
         Optional<Student> studentOptional = studentRepository.findStudentById(student.getId());
@@ -76,8 +93,10 @@ public class StudentService {
             student.setStatus(status);
             log.info("student with id {} status changed to {} ", student_id, status);
         }
-        String updated_at = new java.util.Date().toString();
-        student.setUpdated_at(updated_at);
+        LocalDateTime now = LocalDateTime.now();
+
+        String updated_at = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        student.setUpdatedAt(updated_at);
         studentRepository.save(student);
 
 
