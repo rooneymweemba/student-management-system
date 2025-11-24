@@ -25,15 +25,17 @@ public class Student {
 
     @ValidateStatus
     private String status;
-    private String created_at ;
-    private String updated_at ;
+    @Column(name = "created_at")
+    private String createdAt;
+    @Column(name = "updated_at")
+    private String updatedAt;
 
-    public Student(String name, String id, String content, String status, String created_at, String updated_at) {
+    public Student(String name, String id, String content, String status, String createdAt, String updatedAt) {
         this.name = name;
         this.id = id;
         this.content = content;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Student() {
@@ -60,8 +62,8 @@ public class Student {
         }
         LocalDateTime now = LocalDateTime.now();
         String formatted = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.created_at = formatted;
-        this.updated_at = formatted;
+        this.createdAt = formatted;
+        this.updatedAt = formatted;
 
     }
 
