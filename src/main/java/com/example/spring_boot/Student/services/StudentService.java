@@ -76,7 +76,8 @@ public class StudentService {
     @Transactional
     public void updateStudent(String student_id,
                               String name,
-                              String status){
+                              String status,
+                              String content){
         Optional<Student> studentOptional = studentRepository.findById(student_id);
         if(studentOptional.isPresent()){
             log.info("student with {} has been found", student_id);
@@ -93,6 +94,42 @@ public class StudentService {
             student.setStatus(status);
             log.info("student with id {} status changed to {} ", student_id, status);
         }
+        if (content != null && !content.isEmpty() && !Objects.equals(student.getContent(), content)){
+            student.setContent(content);
+            log.info("student with id {} content changed to {} ", student_id, content);
+        }
+        LocalDateTime now = LocalDateTime.now();
+
+        String updated_at = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        student.setUpdatedAt(updated_at);
+        studentRepository.save(student);
+
+
+    }
+    @Transactional
+    public void updateStudentwithContent(String student_id,
+                              String name,
+                              String status, String Content){
+        Optional<Student> studentOptional = studentRepository.findById(student_id);
+        if(studentOptional.isPresent()){
+            log.info("student with {} has been found", student_id);
+        }
+
+        Student student = studentOptional.get();
+
+
+        if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)){
+            student.setName(name);
+            log.info("student with id {} name changed to {} ", student_id, name);
+        }
+        if (status != null && !status.isEmpty() && !Objects.equals(student.getStatus(), status)){
+            student.setStatus(status);
+            log.info("student with id {} status changed to {} ", student_id, status);
+        }
+        if (Content != null && !Content.isEmpty() && !Objects.equals(student.getContent(), Content)){
+            student.setContent(Content);
+            log.info("student with id {} content changed to {} ", student_id, Content);
+        }
         LocalDateTime now = LocalDateTime.now();
 
         String updated_at = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -103,3 +140,5 @@ public class StudentService {
     }
 
 }
+
+

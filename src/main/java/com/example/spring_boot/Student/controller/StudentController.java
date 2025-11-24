@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -75,29 +76,35 @@ public class StudentController {
         ApiResponse response = new ApiResponse("Student deleted successfully",status);
         return new  ResponseEntity<>(response,status);
     }
-    @PutMapping(path = "{id}")
+    @PutMapping(path = "updateStudent/{id}")
     public ResponseEntity<ApiResponse> updateStudent(@Valid
         @PathVariable("id") String id,
         @RequestParam(required = false) String name,
-        @RequestParam(required = false) String status){
-
-        studentService.updateStudent(id, name, status);
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String content) {
+        studentService.updateStudent(id, name, status, content);
         List<String> updated = new ArrayList<>();
-        if (name != null) {
+
+        if (StringUtils.hasText(name)) {
             updated.add("name");
         }
-        if (status != null) {
+        if (StringUtils.hasText(status)) {
             updated.add("status");
         }
+        if (StringUtils.hasText(content)) {
+            updated.add("content");
+        }
+
         String incompleteMessage;
         if (updated.isEmpty()) {
             incompleteMessage = "No fields were updated";
-        } else if (updated.size() == 1) {
-            incompleteMessage = updated.get(0) + " has been updated";
         } else {
-            incompleteMessage = String.join(" and ", updated) + " have been updated";
-        }
+            String fieldsUpdated = String.join(", ", updated.subList(0, updated.size() - 1))
+                    + (updated.size() > 1 ? " and " : "")
+                    + updated.get(updated.size() - 1);
 
+            incompleteMessage = fieldsUpdated + (updated.size() == 1 ? " has been updated" : " have been updated");
+        }
         HttpStatus httpStatus = HttpStatus.OK;
         String message = String.format("Student with id %s has been updated ",id) + incompleteMessage;
         ApiResponse response = new ApiResponse(message,httpStatus);
