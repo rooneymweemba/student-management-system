@@ -69,20 +69,21 @@ public class StudentController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "{id}")
-    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable("id") String id){
+    @DeleteMapping(path = "{student_id}")
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable("student_id") String id){
         studentService.deleteStudent(id);
         HttpStatus status = HttpStatus.NO_CONTENT;
         ApiResponse response = new ApiResponse("Student deleted successfully",status);
         return new  ResponseEntity<>(response,status);
     }
-    @PutMapping(path = "updateStudent/{id}")
+    @PutMapping(path = "updateStudent/{student_id}")
     public ResponseEntity<ApiResponse> updateStudent(@Valid
-        @PathVariable("id") String id,
+        @PathVariable("student_id") String student_id,
         @RequestParam(required = false) String name,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String content) {
-        studentService.updateStudent(id, name, status, content);
+        log.info("received update student request -> {}", student_id);
+        studentService.updateStudent(student_id, name, status, content);
         List<String> updated = new ArrayList<>();
 
         if (StringUtils.hasText(name)) {
@@ -95,18 +96,18 @@ public class StudentController {
             updated.add("content");
         }
 
-        String incompleteMessage;
-        if (updated.isEmpty()) {
-            incompleteMessage = "No fields were updated";
+        String fieldsUpdated;
+        String incompleteMessage = "";
+        if (updated.size() == 1) {
+            fieldsUpdated = updated.get(0);
         } else {
-            String fieldsUpdated = String.join(", ", updated.subList(0, updated.size() - 1))
-                    + (updated.size() > 1 ? " and " : "")
+            fieldsUpdated = String.join(", ", updated.subList(0, updated.size() - 1))
+                    + " and "
                     + updated.get(updated.size() - 1);
-
             incompleteMessage = fieldsUpdated + (updated.size() == 1 ? " has been updated" : " have been updated");
         }
         HttpStatus httpStatus = HttpStatus.OK;
-        String message = String.format("Student with id %s has been updated ",id) + incompleteMessage;
+        String message = String.format("Student with id %s has been updated ",student_id) + incompleteMessage;
         ApiResponse response = new ApiResponse(message,httpStatus);
         return new  ResponseEntity<>(response,httpStatus);
     }

@@ -14,25 +14,37 @@ import jakarta.validation.constraints.*;
 @Entity
 @Table
 public class Student {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "student_id", nullable = false, unique = true)
+    private String student_id = generateRandomId(10);
+
     @NotBlank
     @Size(max = 30)
     @ValidateNonNumeric(message = "Name must not contain numeric characters")
     private String name;
-    @Id
-    private String id = generateRandomId(10);
+
+
     @Size(max = 255)
+    @Column(name = "content")
     private String content;
 
     @ValidateStatus
     private String status;
+
     @Column(name = "created_at")
     private String createdAt;
+
     @Column(name = "updated_at")
     private String updatedAt;
 
-    public Student(String name, String id, String content, String status, String createdAt, String updatedAt) {
+    public Student(String name, String student_id, String content, String status, String createdAt, String updatedAt) {
         this.name = name;
-        this.id = id;
+
+        this.student_id = student_id;
         this.content = content;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -53,8 +65,8 @@ public class Student {
 
     @PrePersist
     public void onCreate() {
-        if (this.id == null) {
-            this.id = generateRandomId(10);
+        if (this.student_id == null) {
+            this.student_id = generateRandomId(10);
 
         }
         if (this.status == null || !this.status.equals("PENDING") && !this.status.equals("DONE")){
