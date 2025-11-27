@@ -57,7 +57,7 @@ public class StudentService {
     public void addNewStudent(Student student){
         Optional<Student> studentOptional = studentRepository.findStudentById(student.getStudent_id());
         studentRepository.save(student);
-        log.info("student with id {} has been added",student.getId()) ;
+        log.info("student with id {} has been added",student.getStudent_id()) ;
         if(studentOptional.isPresent()){
             log.error("id has already been given out");
         }
